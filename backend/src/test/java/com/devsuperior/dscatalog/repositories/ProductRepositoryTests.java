@@ -2,6 +2,7 @@ package com.devsuperior.dscatalog.repositories;
 
 import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.tests.Factory;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,22 @@ public class ProductRepositoryTests {
     }
 
     @Test
+    public void findByIdShouldReturnNonEmptyOptionalWhenIdExists(){
+
+        Optional<Product> obj = repository.findById(existingId);
+
+        Assertions.assertTrue(obj.isPresent());
+    }
+
+    @Test
+    public void findByIdShouldReturnEmptyOptionalWhenIdDoesNotExist(){
+
+        Optional<Product> obj = repository.findById(nonExistingId);
+
+        Assertions.assertFalse(obj.isPresent());
+    }
+
+    @Test
     public void saveShouldPersistWithAutoincrementWhenIdIsNull(){
 
         Product product = Factory.createProduct();
@@ -42,11 +59,9 @@ public class ProductRepositoryTests {
 
     @Test
     public void deleteShouldDeleteObjectWhenIdExist(){
-
-         repository.deleteById(existingId);
+        repository.deleteById(existingId);
 
         Optional<Product> result = repository.findById(existingId);
         Assertions.assertFalse(result.isPresent());
-
     }
 }
