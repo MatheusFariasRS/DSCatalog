@@ -22,8 +22,6 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-
-
     @Autowired
     private ProductRepository repository;
 
@@ -66,11 +64,14 @@ public class ProductService {
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
         try {
             repository.deleteById(id);
         }
         catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Referential integrity failure");
+            throw new DatabaseException("Falha de integridade referencial");
         }
     }
 
